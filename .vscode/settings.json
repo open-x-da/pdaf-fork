@@ -1,0 +1,45 @@
+{
+    "cmake.ignoreCMakeListsMissing": true,
+    "terminal.integrated.profiles.windows": {
+        "MSYS2": {
+            "path": "C:\\msys64\\usr\\bin\\bash.exe",
+            "args": ["--login", "-i"],
+            "env": {
+                "MSYSTEM": "MINGW64",
+                "CHERE_INVOKING": "1",
+                "MSYS2_PATH_TYPE": "inherit"
+            },
+            "icon": "terminal-bash"
+        },
+        "PowerShell": {
+            "source": "PowerShell",
+            "icon": "terminal-powershell"
+        },
+        "Command Prompt": {
+            "path": [
+                "${env:windir}\\Sysnative\\cmd.exe",
+                "${env:windir}\\System32\\cmd.exe"
+            ],
+            "args": [],
+            "icon": "terminal-cmd"
+        }
+    },
+    "terminal.integrated.defaultProfile.windows": "MSYS2",
+    "terminal.integrated.env.windows": {
+        "MSYSTEM": "MINGW64"
+    },
+    "files.associations": {
+        "*.F90": "fortran",
+        "*.f90": "fortran",
+        "*.F": "fortran",
+        "*.f": "fortran",
+        "*.FOR": "fortran",
+        "*.for": "fortran",
+        "*.F95": "fortran",
+        "*.f95": "fortran",
+        "*.F03": "fortran",
+        "*.f03": "fortran",
+        "*.F08": "fortran",
+        "*.f08": "fortran"
+    }
+}

@@ -1,0 +1,55 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build Tutorial Offline",
+            "type": "shell",
+            "command": "make",
+            "args": ["PDAF_ARCH=linux_gfortran"],
+            "options": {
+                "cwd": "${workspaceFolder}/tutorial/offline_2D_serial"
+            },
+            "problemMatcher": ["$gcc"],
+            "group": "build",
+            "detail": "Build the offline tutorial executable"
+        },
+        {
+            "label": "Clean All Tutorial Offline",
+            "type": "shell",
+            "command": "make",
+            "args": ["PDAF_ARCH=linux_gfortran", "cleanall"],
+            "options": {
+                "cwd": "${workspaceFolder}/tutorial/offline_2D_serial"
+            },
+            "problemMatcher": [],
+            "group": "build",
+            "detail": "Clean all in offline tutorial (including PDAF library)"
+        },
+        {
+            "label": "Clean and Build All",
+            "dependsOrder": "sequence",
+            "dependsOn": [
+                "Clean All Tutorial Offline",
+                "Build Tutorial Offline"
+            ],
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "detail": "Clean and rebuild everything"
+        },
+        {
+            "label": "Build All",
+            "dependsOrder": "sequence",
+            "dependsOn": [
+                "Build Tutorial Offline"
+            ],
+            "problemMatcher": [],
+            "group": "build",
+            "detail": "Build tutorial"
+        }
+    ]
+} 

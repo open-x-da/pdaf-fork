@@ -1,0 +1,75 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug PDAF_offline (with GDB)",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/tutorial/offline_2D_serial/PDAF_offline.exe",
+            "args": [],
+            "stopAtEntry": true,
+            "cwd": "${workspaceFolder}/tutorial/offline_2D_serial",
+            "environment": [
+                {
+                    "name": "PATH",
+                    "value": "C:\\msys64\\mingw64\\bin;${env:PATH}"
+                }
+            ],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            // Update this path to your GDB installation
+            // Common locations:
+            // MinGW: "C:/MinGW/bin/gdb.exe"
+            // MinGW-w64: "C:/mingw64/bin/gdb.exe"
+            // MSYS2: "C:/msys64/mingw64/bin/gdb.exe"
+            // Cygwin: "C:/cygwin64/bin/gdb.exe"
+            // Or use full path to your gdb.exe
+            "miDebuggerPath": "C:/msys64/mingw64/bin/gdb.exe",
+            "preLaunchTask": "Build All",
+            "sourceFileMap": {
+                "/d/linux/PDAF": "${workspaceFolder}",
+                "D:\\linux\\PDAF": "${workspaceFolder}"
+            },
+            "logging": {
+                "engineLogging": true,
+                "trace": true,
+                "traceResponse": true
+            },
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "Set Disassembly Flavor to Intel",
+                    "text": "-gdb-set disassembly-flavor intel",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "Set directories for source files",
+                    "text": "directory ${workspaceFolder}/tutorial/offline_2D_serial",
+                    "ignoreFailures": false
+                },
+                {
+                    "description": "Set additional source directories",
+                    "text": "directory ${workspaceFolder}/src",
+                    "ignoreFailures": false
+                },
+                {
+                    "description": "Set language to Fortran",
+                    "text": "-gdb-set language fortran",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "Set breakpoint at line 50 in main_offline.F90",
+                    "text": "-break-insert ${workspaceFolder}/tutorial/offline_2D_serial/main_offline.F90:50",
+                    "ignoreFailures": true
+                }
+            ]
+        }
+    ]
+} 

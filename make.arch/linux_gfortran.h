@@ -20,7 +20,7 @@ RANLIB = ranlib
 
 # C preprocessor
 # (only required, if preprocessing is not performed via the compiler)
-CPP = /usr/bin/cpp
+CPP = /mingw64/bin/cpp
 
 # Definitions for CPP
 # Define USE_PDAF to include PDAF
@@ -34,7 +34,12 @@ CPP_DEFS = -DUSE_PDAF
 # To use OpenMP parallelization in PDAF, specify it here (-fopenmp (gfortran) or -openmp (ifort))
 #   (You should explicitly define double precision for floating point
 #   variables in the compilation)  
-OPT = -O3 -fdefault-real-8
+# Debug options: -O0 (no optimization), -g (debug symbols), -fbacktrace (stack trace)
+# -fcheck=all (runtime checks), -Wall (all warnings), -fbounds-check (array bounds)
+# -finit-real=nan (catch uninitialized), -ffpe-trap=invalid,zero,overflow (floating point exceptions)
+# -ggdb3 (maximum debug info for GDB), -fdebug-prefix-map (fix source paths)
+# -fno-omit-frame-pointer (better stack traces), -gdwarf-4 (DWARF 4 debug format)
+OPT = -O0 -ggdb3 -gdwarf-4 -fbacktrace -fdefault-real-8 -fcheck=all -Wall -Wextra -fbounds-check -finit-real=nan -ffpe-trap=invalid,zero,overflow -fno-omit-frame-pointer
 
 # Optimization specifications for Linker
 OPT_LNK = $(OPT)
