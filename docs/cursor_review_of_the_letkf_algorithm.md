@@ -11,7 +11,7 @@ Please review the letkf algorithm
 
 **Cursor**
 
-Below is a functional walkthrough of the Local Ensemble Transform Kalman Filter (LETKF) as it is implemented in PDAF  together with notes on where the algorithmic steps appear in the sources you showed.  The aim is to give you a “road-map” so you can quickly locate or modify individual pieces.
+Below is a functional walkthrough of the Local Ensemble Transform Kalman Filter (LETKF) as it is implemented in PDAF  together with notes on where the algorithmic steps appear in the sources you showed.  The aim is to give you a "road-map" so you can quickly locate or modify individual pieces.
 
 -------------------------------------------------------------
 1. High-level control flow
@@ -40,11 +40,11 @@ Below is a functional walkthrough of the Local Ensemble Transform Kalman Filter 
 -------------------------------------------------------------
 2. `PDAF_letkf_update.F90`  (analysis driver)
 -------------------------------------------------------------
-For clarity all variables with the suffix “_p” are PE-local (whole model domain on one MPI task), “_l” are truly local (current local analysis sub-domain), “_f” are full observation vectors needed on that PE.
+For clarity all variables with the suffix "_p" are PE-local (whole model domain on one MPI task), "_l" are truly local (current local analysis sub-domain), "_f" are full observation vectors needed on that PE.
 
 Steps inside `PDAF_letkf_update`:
 
-1.  (Optional) convert ensemble anomalies back to physical states if you run the “fixed covariance” variant (subtype = 2/3).
+1.  (Optional) convert ensemble anomalies back to physical states if you run the "fixed covariance" variant (subtype = 2/3).
 
 2.  `U_prepoststep` is called **before** the analysis with a negative time step number so you can inspect the pure forecast ensemble.
 
@@ -76,7 +76,7 @@ Steps inside `PDAF_letkf_update`:
 
     h) Apply random rotation (`rndmat`) if `type_trans==2`.  
     i) Update ensemble anomalies and ensemble mean:  
-       • call `PDAF_etkf_Tright` and `PDAF_etkf_Tleft` helpers to keep the “remove-mean” operator in matrix form (the “T-matrix” formulation, subtype 0/2) or invoke the original Hunt-style formulas (subtype 1).  
+       • call `PDAF_etkf_Tright` and `PDAF_etkf_Tleft` helpers to keep the "remove-mean" operator in matrix form (the "T-matrix" formulation, subtype 0/2) or invoke the original Hunt-style formulas (subtype 1).  
     j) Convert back from local domain to full PE domain (`U_l2g_state`) and add analysed increments.  
     k) Collect statistics and memory counters, then loop to next domain.
 
@@ -90,7 +90,7 @@ Steps inside `PDAF_letkf_update`:
 • `subtype`  
  0  = LETKF with T-matrix (default)  
  1  = Hunt et al. (2007) formulation  
- 2  = Fixed error-subspace (error basis doesn’t evolve)  
+ 2  = Fixed error-subspace (error basis doesn't evolve)  
  3  = as 2, but with global covariance matrix fixed in time
 
 • `type_trans`  
@@ -101,7 +101,7 @@ Steps inside `PDAF_letkf_update`:
 • `type_forget`  
  0  = fixed forgetting factor  
  1  = adapt factor *globally*  
- 2  = adapt factor *per local domain* (Scale‐dependent LETKF)
+ 2  = adapt factor *per local domain* (Scale-dependent LETKF)
 
 • OpenMP:  
    The complete local-domain loop is threaded.  Only thread 0 prints to the screen.
@@ -139,10 +139,10 @@ Mandatory user callbacks (you saw them in the interface list):
 -------------------------------------------------------------
 Key take-aways
 -------------------------------------------------------------
-1.  The PDAF LETKF is thoroughly modular: all model-dependent parts are isolated in user callbacks; PDAF core never “knows” your model grid or obs formats.  
+1.  The PDAF LETKF is thoroughly modular: all model-dependent parts are isolated in user callbacks; PDAF core never "knows" your model grid or obs formats.  
 2.  Domain localisation is fully supported; the local updates are OpenMP-parallel and run independently on every PE.  
 3.  A versatile set of options (random rotation, adaptive inflation, different square-root formulations) can be activated simply by parameter settings; no code changes are required.  
-4.  Because the algorithm stores ensemble anomalies in “T-matrix” form, mean removal is done by very cheap matrix multiplications instead of explicit subtraction loops, which reduces computational cost for large ensembles.
+4.  Because the algorithm stores ensemble anomalies in "T-matrix" form, mean removal is done by very cheap matrix multiplications instead of explicit subtraction loops, which reduces computational cost for large ensembles.
 
 This should give you a concise, code-oriented overview of how the LETKF algorithm is realised in PDAF and where to step in for customisation.
 
@@ -160,7 +160,7 @@ Below are two complementary flow-charts that capture the logic you just browsed 
 • Chart 1 shows the complete *forecast ↔ analysis* cycle as the model executes.  
 • Chart 2 zooms into what happens inside the LETKF analysis itself on the filter PEs.
 
-(Everything is pure text / ASCII so you can paste it into documentation or comments.  Boxes in double-lines “╔═…═╗” are major PDAF subroutines; single-line boxes are user-supplied callbacks.)
+(Everything is pure text / ASCII so you can paste it into documentation or comments.)
 
 ────────────────────────────────────────────────────────────
 Chart 1 – Overall PDAF–LETKF coupling inside the model loop
@@ -541,19 +541,19 @@ Please summarize the mathmatic forumula of the letkf with markdown syntax
 
 ### Local Ensemble Transform Kalman Filter (LETKF) – key formulas  
 
-Below \(N\) is the ensemble size, bold symbols are matrices, plain bold‐lowercase are column vectors, superscripts \(f,a\) denote **forecast** and **analysis**.
+Below \(N\) is the ensemble size, bold symbols are matrices, plain bold-lowercase are column vectors, superscripts \(f,a\) denote **forecast** and **analysis**.
 
 ---
 
 #### 1. Build forecast quantities  
 
 ```math
-\begin{aligned}
-\bar{\mathbf x}^f      &= \frac{1}{N}\sum_{i=1}^{N}\mathbf x_i^f   &&\text{mean state}\\
-\mathbf X'^{\,f}       &= \bigl[\,\mathbf x_1^f-\bar{\mathbf x}^f\,\;\cdots\;\mathbf x_N^f-\bar{\mathbf x}^f\bigr] &&\text{state anomalies}\\[4pt]
-\bar{\mathbf y}^f      &= \frac{1}{N}\sum_{i=1}^{N}\mathbf y_i^f,\quad
-   \mathbf Y'^{\,f}    = \bigl[\,\mathbf y_1^f-\bar{\mathbf y}^f\,\;\cdots\;\mathbf y_N^f-\bar{\mathbf y}^f\bigr] &&\text{in obs space}
-\end{aligned}
+\begin{align*}
+\bar{\mathbf x}^f      &= \frac{1}{N}\sum_{i=1}^{N}\mathbf x_i^f   && \text{mean state} \\
+\mathbf X'^{\,f}       &= \bigl[\,\mathbf x_1^f-\bar{\mathbf x}^f\,\;\cdots\;\mathbf x_N^f-\bar{\mathbf x}^f\bigr] && \text{state anomalies} \\[4pt]
+\bar{\mathbf y}^f      &= \frac{1}{N}\sum_{i=1}^{N}\mathbf y_i^f, \\
+\mathbf Y'^{\,f}    &= \bigl[\,\mathbf y_1^f-\bar{\mathbf y}^f\,\;\cdots\;\mathbf y_N^f-\bar{\mathbf y}^f\bigr] && \text{in obs space}
+\end{align*}
 ```
 
 with \(\mathbf y_i^f = H\mathbf x_i^f\) and observation error covariance **R**.
@@ -568,7 +568,7 @@ with \(\mathbf y_i^f = H\mathbf x_i^f\) and observation error covariance **R**.
 
 ---
 
-#### 3. “Ensemble–space” gain matrices  
+#### 3. "Ensemble–space" gain matrices  
 
 Define the **ensemble-space inverse matrix**
 
@@ -584,11 +584,13 @@ where the scalar \(\alpha\ge 1\) is the (adaptive) forgetting / inflation factor
 Then
 
 ```math
-\mathbf P   \;=\; \mathbf A^{-1}      &&\text{analysis error in ensemble space}\\[4pt]
-\bar{\mathbf w}^a \;=\; \mathbf P\,\mathbf Y'^{f\,\! \top}\mathbf R^{-1}\mathbf d
-                                       &&\text{weights for the mean}\\[4pt]
-\mathbf W^a = \sqrt{N-1}\;\mathbf P^{1/2}\,\mathbf Q
-                                       &&\text{square-root for anomalies}
+\begin{align*}
+\mathbf{P}   &= \mathbf{A}^{-1}      && \text{analysis error in ensemble space} \\[4pt]
+\bar{\mathbf{w}}^a &= \mathbf{P}\,(\mathbf{Y}^{f})'^{\!\top}\mathbf{R}^{-1}\mathbf{d}
+                                       && \text{weights for the mean} \\[4pt]
+\mathbf{W}^a &= \sqrt{N-1}\;\mathbf{P}^{1/2}\,\mathbf{Q}
+                                       && \text{square-root for anomalies}
+\end{align*}
 ```
 
 * \(\mathbf P^{1/2}\) is any symmetric square-root of **P**  
@@ -652,13 +654,13 @@ However LETKF never forms **K** explicitly; all computations stay in the low-dim
 These compact equations correspond exactly to the implementation you saw in  
 `PDAF_letkf_analysis_T.F90` (T-matrix variant) and `PDAF_letkf_update.F90`.
 
-```plaintext
-\begin{aligned}
-\bar{\mathbf x}^f      &= \frac{1}{N}\sum_{i=1}^{N}\mathbf x_i^f   &&\text{mean state}\\
-\mathbf X'^{\,f}       &= \bigl[\,\mathbf x_1^f-\bar{\mathbf x}^f\,\;\cdots\;\mathbf x_N^f-\bar{\mathbf x}^f\bigr] &&\text{state anomalies}\\[4pt]
-\bar{\mathbf y}^f      &= \frac{1}{N}\sum_{i=1}^{N}\mathbf y_i^f,\quad
-   \mathbf Y'^{\,f}    = \bigl[\,\mathbf y_1^f-\bar{\mathbf y}^f\,\;\cdots\;\mathbf y_N^f-\bar{\mathbf y}^f\bigr] &&\text{in obs space}
-\end{aligned}
+```math
+\begin{align*}
+\bar{\mathbf x}^f      &= \frac{1}{N}\sum_{i=1}^{N}\mathbf x_i^f   && \text{mean state} \\
+\mathbf X'^{\,f}       &= \bigl[\,\mathbf x_1^f-\bar{\mathbf x}^f\,\;\cdots\;\mathbf x_N^f-\bar{\mathbf x}^f\bigr] && \text{state anomalies} \\[4pt]
+\bar{\mathbf y}^f      &= \frac{1}{N}\sum_{i=1}^{N}\mathbf y_i^f, \\
+\mathbf Y'^{\,f}    &= \bigl[\,\mathbf y_1^f-\bar{\mathbf y}^f\,\;\cdots\;\mathbf y_N^f-\bar{\mathbf y}^f\bigr] && \text{in obs space}
+\end{align*}
 ```
 
 ```math
@@ -674,11 +676,13 @@ These compact equations correspond exactly to the implementation you saw in
 ```
 
 ```math
+\begin{align*}
 \mathbf P   \;=\; \mathbf A^{-1}      &&\text{analysis error in ensemble space}\\[4pt]
 \bar{\mathbf w}^a \;=\; \mathbf P\,\mathbf Y'^{f\,\! \top}\mathbf R^{-1}\mathbf d
                                        &&\text{weights for the mean}\\[4pt]
 \mathbf W^a = \sqrt{N-1}\;\mathbf P^{1/2}\,\mathbf Q
                                        &&\text{square-root for anomalies}
+\end{align*}
 ```
 
 ```math
@@ -726,7 +730,7 @@ Below is a pragmatic class checklist for a clean, modular C++ re-implementation 
    • mean(), anomalies(), size() …
 
 2. `EnsembleSpaceMatrix`  
-   • small \(N\times N\) matrices that live in “ensemble space” ( **A**, **W**, random rotation, …)  
+   • small \(N\times N\) matrices that live in "ensemble space" ( **A**, **W**, random rotation, …)  
    • eigen-decomposition, square-root, etc.
 
 3. `AnalysisDomain` (or `LocalDomain`)  
