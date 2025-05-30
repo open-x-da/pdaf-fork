@@ -40,16 +40,6 @@
                 "isDefault": true
             },
             "detail": "Clean and rebuild everything"
-        },
-        {
-            "label": "Build All",
-            "dependsOrder": "sequence",
-            "dependsOn": [
-                "Build Tutorial Offline"
-            ],
-            "problemMatcher": [],
-            "group": "build",
-            "detail": "Build tutorial"
         }
     ]
 } 
