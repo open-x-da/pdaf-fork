@@ -102,7 +102,7 @@ MODULE PDAF_mod_filter
   INTEGER :: dim_obs       ! Dimension of next observation
   INTEGER :: screen=0      ! Control verbosity of filter routines
                    ! (0) quiet; (1) normal output; (2); plus timings; (3) debug output
-  INTEGER :: debug=0       ! Debugging flag: print debug information if >0
+  INTEGER :: debug=1       ! Debugging flag: print debug information if >0
   INTEGER :: incremental=0 ! Whether to perform incremental updating
   INTEGER :: type_forget=0 ! Type of forgetting factor
                            ! (0): fixed; (1) global adaptive; (2) local adaptive
