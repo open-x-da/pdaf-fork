@@ -69,7 +69,7 @@ SUBROUTINE init_pdaf()
   ! +++ For available options see MOD_ASSIMILATION +++
   ! ++++++++++++++++++++++++++++++++++++++++++++++++++
 
-  filtertype = 6     ! Type of filter
+  filtertype = 5     ! Type of filter
   subtype = 0        ! Subtype of filter
 
   forget  = 1.0      ! Forgetting factor value for inflation

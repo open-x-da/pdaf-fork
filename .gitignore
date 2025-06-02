@@ -4,3 +4,7 @@ include
 external/**/*.mod
 external/**/*.o
 Srcfiles
+
+*.o
+*.mod
+*.exe

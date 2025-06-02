@@ -73,7 +73,7 @@ PROGRAM MAIN_OFFLINE
 ! *** Initialize MPI communicators for PDAF (model and filter) ***
 ! *** NOTE: It is always n_modeltasks=1 for offline mode       ***
 
-  CALL init_parallel_pdaf(0, 1)
+  CALL init_parallel_pdaf(0, 3)
 
 ! *** Initialize model information ***
 ! *** This should only be information on the model dimension
