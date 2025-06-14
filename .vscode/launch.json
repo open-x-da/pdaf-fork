@@ -9,7 +9,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/tutorial/offline_2D_serial/PDAF_offline.exe",
-            "args": [],
+            "args": ["-screen", "3", "-filtertype", "4", "-subtype", "1"],
             "stopAtEntry": true,
             "cwd": "${workspaceFolder}/tutorial/offline_2D_serial",
             "environment": [],

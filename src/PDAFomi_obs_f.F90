@@ -102,7 +102,7 @@ MODULE PDAFomi_obs_f
   SAVE
 
 ! *** Module internal variables
-  INTEGER :: debug=0                    !< Debugging flag
+  INTEGER :: debug=1                    !< Debugging flag
   INTEGER :: error=0                    !< Error flag
 
   REAL, ALLOCATABLE :: domain_limits(:) !< Limiting coordinates (NSWE) for process domain

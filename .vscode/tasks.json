@@ -7,7 +7,7 @@
             "label": "Build Tutorial Offline",
             "type": "shell",
             "command": "make",
-            "args": ["PDAF_ARCH=linux_gfortran"],
+            "args": ["PDAF_ARCH=linux_gfortran_openmpi"],
             "options": {
                 "cwd": "${workspaceFolder}/tutorial/offline_2D_serial"
             },
